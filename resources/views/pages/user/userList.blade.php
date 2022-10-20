@@ -27,20 +27,22 @@
                     </thead>
 
                     <tbody>
+                        @foreach ($data as $user)
+                            
                         <tr>
-                            <td>Dale Mack</td>
-                            <td>dale@mail.com</td>
-                            <td>Admin</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>admin</td>
                             <td class="text-center">
                                 <a id="actions1Invoker" class="link-muted" href="#!" aria-haspopup="true" aria-expanded="false"
-                                   data-toggle="dropdown">
-                                    <i class="fa fa-sliders-h"></i>
-                                </a>
+                                data-toggle="dropdown">
+                                <i class="fa fa-sliders-h"></i>
+                            </a>
 
                                 <div class="dropdown-menu dropdown-menu-right dropdown" style="width: 150px;" aria-labelledby="actions1Invoker">
                                     <ul class="list-unstyled mb-0">
                                         <li>
-                                            <a class="d-flex align-items-center link-muted py-2 px-3" data-toggle="modal" href="#detailUser">
+                                            <a class="d-flex align-items-center link-muted py-2 px-3" href="{{route('user.edit', $user->id )}}">
                                                 <i class="fa fa-edit mr-2"></i> Edit
                                             </a>
                                         </li>
@@ -53,6 +55,7 @@
                                 </div>
                             </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -61,4 +64,3 @@
 </div>
 @endsection
 @include('pages.user.userCreate')
-@include('pages.user.userDetail')
