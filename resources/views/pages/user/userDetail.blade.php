@@ -1,28 +1,40 @@
-<!-- Vertically Centered Modals -->
-<div class="modal fade" id="detailUser" tabindex="-1" role="dialog" aria-labelledby="detailUserTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Edit User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+@extends('layouts.app')
+
+@section('content')
+    
+<div class="col-md-6 mb-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h3 card-header-title">Detail {{ $user->name }}</h2>
             </div>
-            <div class="modal-body">
-                <div class="form-group mb-4">
-                    <label for="name">Name</label>
-                    <input id="name" class="form-control form-pill" type="text"
-                        placeholder="Input Name" value="Paijo" aria-describedby="name">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input id="email" class="form-control form-pill" type="email"
-                        placeholder="Input Email Address" value="paijonackal@mail.com" aria-describedby="email">
-                </div>
+            <div class="card-body">
+                <form action="{{route('user.update', $user->id)}}" method="POST" enctype="multipart/form-data" novalidate="novalidate">
+                    @method('PUT')
+                    @csrf
+                    <div class="form-group mb-4">
+                        <label for="name">Name</label>
+                        <input id="name" class="form-control form-pill" type="text"
+                        placeholder="Input Name" value="{{ old('name' ,$user->name) }}" aria-describedby="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input id="email" class="form-control form-pill" type="email"
+                        placeholder="Input Email Address" value="{{ old('email' ,$user->email) }}" aria-describedby="email">
+                    </div>
                 <div class="form-group">
                     {{-- <label for="password">Password</label> --}}
                     <input id="password" class="form-control form-pill" type="hidden"
-                        placeholder="Input password" value="password123" aria-describedby="password">
+                    placeholder="Input password" value="{{ old('password' ,$user->password) }}" aria-describedby="password">
+                </div>
+                <div class="form-group">
+                    <label for="created_at">Created date</label>
+                    <input id="created_at" class="form-control form-pill" type="disabled"
+                     value="{{ old('created_at' ,$user->created_at) }}" aria-describedby="created_at">
+                </div>
+                <div class="form-group">
+                    <label for="updated_at">Updated date</label>
+                    <input id="updated_at" class="form-control form-pill" type="disabled"
+                    value="{{ old('updated_at' ,$user->updated_at) }}" aria-describedby="updated_at">
                 </div>
                 <div class="form-group">
                     <label for="role">Role</label>
@@ -31,12 +43,13 @@
                         <option value="user" selected>User</option>
                     </select>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-text" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-info">Save</button>
+            </form>
+        </div>
+            <div class="card-footer">
+                <a type="button" class="btn btn-text" href="{{ route('user.index')}}">Cancel</a>
+                <button type="submit" class="btn btn-info">Save</button>
             </div>
         </div>
     </div>
 </div>
-<!-- End Vertically Centered Modals -->
+@endsection

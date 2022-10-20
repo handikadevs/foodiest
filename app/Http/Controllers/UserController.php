@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -24,7 +26,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('pages.user.userList');
+        $data = User::get();
+        return view('pages.user.userList')->with('data', $data);
     }
 
     /**
@@ -65,9 +68,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user )
     {
-        //
+        return view('pages.user.userDetail',[
+            'user'=> $user
+        ]);
     }
 
     /**
@@ -77,9 +82,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,User $user)
     {
-        //
+        $user->id = $request->user->id;
+        $user->name = $request->user->get('name');
+        $user->email = $request->user->get('email');
+        $user->password = Hash::make($request->user->password);
+        $user->email_verified_at = $request->user->email_verified_at;
+        $user->created_at = $request->user->created_at;
+        $user->update_at = now();
+
+        $user->save();
+        return redirect()->route('user.index');
+
     }
 
     /**
