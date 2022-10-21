@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
@@ -48,7 +50,37 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // valadasi kolom yang harus di isi, sebelum proses upload ke database
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+        ]);
+
+        // request user untuk mendapatkan data user role
+        $user = $request->user();
+
+        // jika user role admin
+        if ($user->hasRole('admin')) {
+            $newUser = new User([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'),
+                'email_verified_at' => now(),
+                'password' => Hash::make('foodiest123'), //password default (foodiest123) untuk user baru yang ditambahkan oleh admin, bukan register sendiri.
+            ]);
+
+            $newUser->save();
+
+            DB::commit();
+
+            alert()->success('Saved', 'User created successfully');
+            return redirect()->route('users.index');
+        }
+
+        // jika user role bukan admin
+        else {
+            // alihkan kembali ke tabel user list
+            return redirect()->route('users.index');
+        }
     }
 
     /**
@@ -68,10 +100,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user )
+    public function edit(User $user)
     {
-        return view('pages.user.userDetail',[
-            'user'=> $user
+        return view('pages.user.userDetail', [
+            'user' => $user
         ]);
     }
 
@@ -82,19 +114,20 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,User $user)
+    public function update(Request $request, User $user)
     {
         $user->id = $request->user->id;
-        $user->name = $request->user->get('name');
-        $user->email = $request->user->get('email');
+        $user->name = $request->get('name');
+        $user->email = $request->get('email');
         $user->password = Hash::make($request->user->password);
         $user->email_verified_at = $request->user->email_verified_at;
         $user->created_at = $request->user->created_at;
-        $user->update_at = now();
+        $user->updated_at = now();
 
         $user->save();
-        return redirect()->route('user.index');
 
+        alert()->success('Edited', 'User updated successfully');
+        return redirect()->route('users.index');
     }
 
     /**
@@ -105,6 +138,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+
+        alert()->success('Deleted', 'User deleted successfully');
+        return redirect()->route('users.index');
     }
 }

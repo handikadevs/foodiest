@@ -11,7 +11,8 @@
             <ul class="u-sidebar-nav-menu u-sidebar-nav-menu--top-level">
                 <!-- Dashboard -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link active" href="./index.html">
+                    <a class="u-sidebar-nav-menu__link {{ request()->is('home') ? 'active' : '' }}"
+                        href="{{ route('home') }}">
                         <i class="fa fa-cubes u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Dashboard</span>
                     </a>
@@ -20,15 +21,15 @@
 
                 <!-- Food -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link" href="#!"
-                       data-target="#baseUI">
+                    <a class="u-sidebar-nav-menu__link" href="#!" data-target="#baseUI">
                         <i class="fa fa-utensils u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Food</span>
                         <i class="fa fa-angle-right u-sidebar-nav-menu__item-arrow"></i>
                         <span class="u-sidebar-nav-menu__indicator"></span>
                     </a>
 
-                    <ul id="baseUI" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level" style="display: none;">
+                    <ul id="baseUI" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level"
+                        style="display: none;">
                         <li class="u-sidebar-nav-menu__item">
                             <a class="u-sidebar-nav-menu__link" href="#">
                                 <span class="u-sidebar-nav-menu__item-icon">A</span>
@@ -68,15 +69,15 @@
 
                 <!-- Drink -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link" href="#!"
-                       data-target="#subMenu2">
+                    <a class="u-sidebar-nav-menu__link" href="#!" data-target="#subMenu2">
                         <i class="fa fa-cocktail u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Drink</span>
                         <i class="fa fa-angle-right u-sidebar-nav-menu__item-arrow"></i>
                         <span class="u-sidebar-nav-menu__indicator"></span>
                     </a>
 
-                    <ul id="subMenu2" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level" style="display: none;">
+                    <ul id="subMenu2" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level"
+                        style="display: none;">
                         <li class="u-sidebar-nav-menu__item">
                             <a class="u-sidebar-nav-menu__link" href="#">
                                 <span class="u-sidebar-nav-menu__item-icon">C</span>
@@ -104,36 +105,40 @@
                     </ul>
                 </li>
                 <!-- End Drink -->
-                
+
                 <hr>
 
-                <!-- User Management -->
-                <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link" href="#!"
-                       data-target="#subMenu3">
-                        <i class="far fa-folder-open u-sidebar-nav-menu__item-icon"></i>
-                        <span class="u-sidebar-nav-menu__item-title">User Management</span>
-                        <i class="fa fa-angle-right u-sidebar-nav-menu__item-arrow"></i>
-                        <span class="u-sidebar-nav-menu__indicator"></span>
-                    </a>
+                @if (Auth::user()->hasRole('admin'))
+                    <!-- User Management -->
+                    <li
+                        class="u-sidebar-nav-menu__item {{ request()->is('user_management*') ? 'u-sidebar-nav--opened' : '' }}">
+                        <a class="u-sidebar-nav-menu__link {{ request()->is('user_management*') ? 'active' : '' }}"
+                            href="#" data-target="#userManagement">
+                            <i class="far fa-folder-open u-sidebar-nav-menu__item-icon"></i>
+                            <span class="u-sidebar-nav-menu__item-title">User Management</span>
+                            <i class="fa fa-angle-right u-sidebar-nav-menu__item-arrow"></i>
+                            <span class="u-sidebar-nav-menu__indicator"></span>
+                        </a>
 
-                    <ul id="subMenu3" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level" style="display: none;">
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">U</span>
-                                <span class="u-sidebar-nav-menu__item-title">User</span>
-                            </a>
-                        </li>
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">R</span>
-                                <span class="u-sidebar-nav-menu__item-title">Role</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- End User Management -->
-
+                        <ul id="userManagement" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level"
+                            style="display: none;">
+                            <li class="u-sidebar-nav-menu__item">
+                                <a class="u-sidebar-nav-menu__link {{ request()->is('user_management/users*') ? 'active' : '' }}"
+                                    href="{{ route('users.index') }}">
+                                    <span class="u-sidebar-nav-menu__item-icon">U</span>
+                                    <span class="u-sidebar-nav-menu__item-title">User</span>
+                                </a>
+                            </li>
+                            <li class="u-sidebar-nav-menu__item">
+                                <a class="u-sidebar-nav-menu__link" href="#">
+                                    <span class="u-sidebar-nav-menu__item-icon">R</span>
+                                    <span class="u-sidebar-nav-menu__item-title">Role</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- End User Management -->
+                @endif
             </ul>
         </nav>
     </div>
