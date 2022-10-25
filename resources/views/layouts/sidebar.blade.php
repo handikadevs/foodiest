@@ -21,40 +21,10 @@
 
                 <!-- Food -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link" href="#!" data-target="#baseUI">
+                    <a class="u-sidebar-nav-menu__link {{ request()->is('food*') ? 'active' : '' }}" href="{{ route('food.asian') }}">
                         <i class="fa fa-utensils u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Food</span>
-                        <i class="fa fa-angle-right u-sidebar-nav-menu__item-arrow"></i>
-                        <span class="u-sidebar-nav-menu__indicator"></span>
                     </a>
-
-                    <ul id="baseUI" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level"
-                        style="display: none;">
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">A</span>
-                                <span class="u-sidebar-nav-menu__item-title">Asian</span>
-                            </a>
-                        </li>
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">C</span>
-                                <span class="u-sidebar-nav-menu__item-title">Chinese</span>
-                            </a>
-                        </li>
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">I</span>
-                                <span class="u-sidebar-nav-menu__item-title">Indonesian</span>
-                            </a>
-                        </li>
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">W</span>
-                                <span class="u-sidebar-nav-menu__item-title">Western</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
                 <!-- End Food -->
 
