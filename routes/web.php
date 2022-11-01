@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CakeController;
 use App\Http\Controllers\FoodController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -36,3 +37,5 @@ Route::prefix('food')->group(function () {
 
     
 });
+
+Route::resource('cakes', CakeController::class);
