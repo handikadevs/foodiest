@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CakeController;
+use App\Http\Controllers\DrinkController;
 use App\Http\Controllers\FoodController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -39,3 +40,13 @@ Route::prefix('food')->group(function () {
 });
 
 Route::resource('cakes', CakeController::class);
+
+Route::prefix('drink')->group(function () {
+    Route::resource('drink', DrinkController::class);
+    Route::get('/juices', [DrinkController::class, 'juice'])->name('drink.juice');
+    Route::get('/coffes', [DrinkController::class, 'coffee_and_tea'])->name('drink.coffe');
+    Route::get('/milkshakes', [DrinkController::class, 'milk'])->name('drink.milkshake');
+    Route::get('/squashs', [DrinkController::class, 'squash'])->name('drink.squash');
+
+    
+});
