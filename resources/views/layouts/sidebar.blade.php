@@ -39,40 +39,12 @@
 
                 <!-- Drink -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link" href="#!" data-target="#subMenu2">
+                    <a class="u-sidebar-nav-menu__link {{ request()->is('drink*') ? 'active' : ''}}" href="{{ route('drink.juice')}}">
                         <i class="fa fa-cocktail u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Drink</span>
-                        <i class="fa fa-angle-right u-sidebar-nav-menu__item-arrow"></i>
-                        <span class="u-sidebar-nav-menu__indicator"></span>
+            
                     </a>
 
-                    <ul id="subMenu2" class="u-sidebar-nav-menu u-sidebar-nav-menu--second-level"
-                        style="display: none;">
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">C</span>
-                                <span class="u-sidebar-nav-menu__item-title">Coffee and Tea</span>
-                            </a>
-                        </li>
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">J</span>
-                                <span class="u-sidebar-nav-menu__item-title">Juice</span>
-                            </a>
-                        </li>
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">M</span>
-                                <span class="u-sidebar-nav-menu__item-title">Milk</span>
-                            </a>
-                        </li>
-                        <li class="u-sidebar-nav-menu__item">
-                            <a class="u-sidebar-nav-menu__link" href="#">
-                                <span class="u-sidebar-nav-menu__item-icon">S</span>
-                                <span class="u-sidebar-nav-menu__item-title">Squash</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
                 <!-- End Drink -->
 
