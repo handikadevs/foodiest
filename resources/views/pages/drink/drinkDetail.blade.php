@@ -18,10 +18,14 @@
             </header>
 
             <div class="card-body">
-                <h5 class="h4 card-title">{{ $drink->name }} <i class="text-secondary">{{ $drink->category }}</i></h5>
+                <div class="d-flex align-items-center justify-content-center">
+                    <img class="u-avatar--md rounded img-fluid mr-2"
+                        src="{{ asset('storage/drink/thumbnail/' . $drink->thumbnail) }}" alt="drink Thumbnail">
+                </div>
+                <br>
+                <h5 class="h4 card-title"><b>{{ $drink->name }} </b><i class="text-secondary">{{ $drink->category }}</i>
+                </h5>
                 <p>{{ $drink->description }}</p>
-                <img class="u-avatar--md rounded img-fluid mr-2"
-                    src="{{ asset('storage/drink/thumbnail/' . $drink->thumbnail) }}" alt="drink Thumbnail">
                 <hr>
                 <b>Ingredients</b>
                 <p>{{ $drink->ingredient }}</p>

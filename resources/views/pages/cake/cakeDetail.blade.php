@@ -18,10 +18,13 @@
             </header>
 
             <div class="card-body">
-                <h5 class="h4 card-title">{{ $cake->name }}</h5>
+                <div class="d-flex align-items-center justify-content-center">
+                    <img class="u-avatar--md rounded img-fluid mr-2"
+                        src="{{ asset('storage/cake/thumbnail/' . $cake->thumbnail) }}" alt="cake Thumbnail">
+                </div>
+                <br>
+                <h5 class="h4 card-title"><b>{{ $cake->name }}</b></h5>
                 <p>{{ $cake->description }}</p>
-                <img class="u-avatar--md rounded img-fluid mr-2"
-                    src="{{ asset('storage/cake/thumbnail/' . $cake->thumbnail) }}" alt="cake Thumbnail">
                 <hr>
                 <b>Ingredients</b>
                 <p>{{ $cake->ingredient }}</p>
