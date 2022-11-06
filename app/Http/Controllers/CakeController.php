@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class CakeController extends Controller
 {
-       /**
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -55,9 +55,8 @@ class CakeController extends Controller
         ]);
 
         // Check Thumbnail is Valid
-        if($request->thumbnail->isValid())
-        {
-            $thumbnail = 'thumbnail-'.$request->get('name').'.'.$request->thumbnail->extension();
+        if ($request->thumbnail->isValid()) {
+            $thumbnail = 'thumbnail-' . $request->get('name') . '.' . $request->thumbnail->extension();
             $request->file('thumbnail')->storeAs('cake/thumbnail', $thumbnail, 'public');
         }
 
@@ -70,7 +69,7 @@ class CakeController extends Controller
             'thumbnail' => $thumbnail,
         ]);
         $cake->save();
-        
+
         DB::commit();
 
         alert()->success('Saved', 'Cake recipe created successfully');
@@ -85,7 +84,9 @@ class CakeController extends Controller
      */
     public function show(Cake $cake)
     {
-        //
+        return view('pages.cake.cakeDetail', [
+            'cake' => $cake
+        ]);
     }
 
     /**
@@ -94,11 +95,18 @@ class CakeController extends Controller
      * @param  \App\Models\Cake  $cake
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cake $cake)
+    public function edit(Cake $cake, Request $request)
     {
-        return view('pages.cake.cakeDetail', [
-            'cake' => $cake
-        ]);
+        $user = $request->user();
+
+        if ($user->hasRole('admin')) {
+
+            return view('pages.cake.cakeEdit', [
+                'cake' => $cake
+            ]);
+        } else {
+            return view('pages.error.403');
+        }
     }
 
     /**
@@ -131,12 +139,18 @@ class CakeController extends Controller
      * @param  \App\Models\Cake  $cake
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $cakes = Cake::find($id);
-        $cakes->delete();
+        $user = $request->user();
 
-        alert()->success('Deleted', 'Recipe deleted successfully');
-        return redirect()->route('cakes.index');
+        if ($user->hasRole('admin')) {
+            $cakes = Cake::find($id);
+            $cakes->delete();
+
+            alert()->success('Deleted', 'Recipe deleted successfully');
+            return redirect()->route('cakes.index');
+        } else {
+            return view('pages.error.403');
+        }
     }
 }

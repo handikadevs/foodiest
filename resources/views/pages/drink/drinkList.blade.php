@@ -2,23 +2,60 @@
 
 @section('content')
     <div class="u-body">
-        <h1 class="h2 font-weight-semibold mb-4">Cake</h1>
+        <h1 class="h2 font-weight-semibold mb-4">Drinks</h1>
 
         <div class="card mb-4">
             <header class="card-header d-flex align-items-center">
-                <h2 class="h3 card-header-title">Cakes</h2>
+                <h2 class="h3 card-header-title">
+                    @if (request()->is('drink/juices'))
+                        Juice Drinks
+                    @elseif (request()->is('drink/coffeeteas'))
+                        Coffee and Tea Drinks
+                    @elseif (request()->is('drink/milkshakes'))
+                        Milkshakes Drinks
+                    @elseif (request()->is('drink/squashs'))
+                        Squash Drinks
+                    @endif
+                </h2>
                 <ul class="list-inline ml-auto mb-0">
                     <li class="list-inline-item mr-3">
                         @if (Auth::user()->hasRole('admin'))
-                            <a class="btn btn-primary" data-toggle="modal" href="#createNewCake">Create New Recipe</a>
+                            <a class="btn btn-primary" data-toggle="modal" href="#createNewDrink">Create New Recipe</a>
                         @endif
                     </li>
                 </ul>
             </header>
 
             <div class="card-body">
+                <ul class="nav nav-pills" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('drink/juices') ? 'active' : '' }}"
+                            href="{{ route('drink.juice') }}" role="tablist">
+                            Juice
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('drink/coffeeteas') ? 'active' : '' }}"
+                            href="{{ route('drink.coffeetea') }}" role="tablist">
+                            Coffee and Tea
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('drink/milkshakes') ? 'active' : '' }}"
+                            href="{{ route('drink.milkshake') }}" role="tablist">
+                            Milkshake
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('drink/squashs') ? 'active' : '' }}"
+                            href="{{ route('drink.squash') }}" role="tablist">
+                            Squash
+                        </a>
+                    </li>
+                </ul>
                 <div class="table-responsive">
                     <table class="table table-hover">
+                        <hr>
                         <thead>
                             <tr>
                                 <th scope="col">Pict</th>
@@ -29,15 +66,15 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($data as $cake)
+                            @foreach ($data as $drink)
                                 <tr>
                                     <td>
                                         <img class="u-avatar--xs img-fluid rounded-circle mr-2"
-                                            src="{{ asset('storage/cake/thumbnail/' . $cake->thumbnail) }}"
-                                            alt="Cake Thumbnail">
+                                            src="{{ asset('storage/drink/thumbnail/' . $drink->thumbnail) }}"
+                                            alt="drink Thumbnail">
                                     </td>
-                                    <td>{{ $cake->name }}</td>
-                                    <td>{{ $cake->description }}</td>
+                                    <td>{{ $drink->name }}</td>
+                                    <td>{{ $drink->description }}</td>
                                     <td class="text-center">
                                         @if (Auth::user()->hasRole('admin'))
                                             <a id="actions1Invoker" class="link-muted" href="#!" aria-haspopup="true"
@@ -50,19 +87,19 @@
                                                 <ul class="list-unstyled mb-0">
                                                     <li>
                                                         <a class="d-flex align-items-center link-muted py-2 px-3"
-                                                            href="{{ route('cakes.show', $cake->id) }}">
+                                                            href="{{ route('drink.show', $drink->id) }}">
                                                             <i class="fa fa-eye mr-2"></i> View
                                                         </a>
                                                     </li>
                                                     <li>
                                                         <a class="d-flex align-items-center link-muted py-2 px-3"
-                                                            href="{{ route('cakes.edit', $cake->id) }}">
+                                                            href="{{ route('drink.edit', $drink->id) }}">
                                                             <i class="fa fa-edit mr-2"></i> Edit
                                                         </a>
                                                     </li>
                                                     <li>
                                                         <form method="POST"
-                                                            action="{{ route('cakes.destroy', $cake->id) }}">
+                                                            action="{{ route('drink.destroy', $drink->id) }}">
                                                             @csrf
                                                             <input type="hidden" name="_method" value="DELETE">
                                                             <button type="submit"
@@ -74,7 +111,7 @@
                                                 </ul>
                                             </div>
                                         @else
-                                            <a class="link-muted" href="{{ route('cakes.show', $cake->id) }}">
+                                            <a class="link-muted" href="{{ route('drink.show', $drink->id) }}">
                                                 <i class="fa fa-eye mr-2"></i> View
                                             </a>
                                         @endif
@@ -88,4 +125,4 @@
         </div>
     </div>
 @endsection
-@include('pages.cake.cakeCreate')
+@include('pages.drink.drinkCreate')

@@ -35,8 +35,6 @@ Route::prefix('food')->group(function () {
     Route::get('/chineses', [FoodController::class, 'chinese'])->name('food.chinese');
     Route::get('/indonesians', [FoodController::class, 'indonesian'])->name('food.indonesian');
     Route::get('/westerns', [FoodController::class, 'western'])->name('food.western');
-
-    
 });
 
 Route::resource('cakes', CakeController::class);
@@ -44,9 +42,7 @@ Route::resource('cakes', CakeController::class);
 Route::prefix('drink')->group(function () {
     Route::resource('drink', DrinkController::class);
     Route::get('/juices', [DrinkController::class, 'juice'])->name('drink.juice');
-    Route::get('/coffes', [DrinkController::class, 'coffee_and_tea'])->name('drink.coffe');
+    Route::get('/coffeeteas', [DrinkController::class, 'coffee_and_tea'])->name('drink.coffeetea');
     Route::get('/milkshakes', [DrinkController::class, 'milk'])->name('drink.milkshake');
     Route::get('/squashs', [DrinkController::class, 'squash'])->name('drink.squash');
-
-    
 });

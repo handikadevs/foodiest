@@ -18,38 +18,38 @@ class DrinkController extends Controller
         $this->middleware('auth');
     }
 
-     /** Customization function for grouping drink category */
-    
+    /** Customization function for grouping drink category */
+
     /** Juice List */
-    public function Juice()
+    public function juice()
     {
         $data = Drink::where('category', 'juice')->get();
-        
-        return view('pages.drink.juice.juiceList')->with('data', $data);
+
+        return view('pages.drink.drinkList')->with('data', $data);
     }
 
     /** Coffe List */
-    public function Coffee_and_tea()
+    public function coffee_and_tea()
     {
         $data = Drink::where('category', 'coffee and tea')->get();
-        
-        return view('pages.drink.coffe.coffeList')->with('data', $data);
+
+        return view('pages.drink.drinkList')->with('data', $data);
     }
 
     /** Milk List */
-    public function Milk()
+    public function milk()
     {
         $data = Drink::where('category', 'milk')->get();
-        
-        return view('pages.drink.milkshake.milkshakeList')->with('data', $data);
+
+        return view('pages.drink.drinkList')->with('data', $data);
     }
 
     /** Squash List */
-    public function Squash()
+    public function squash()
     {
         $data = Drink::where('category', 'squash')->get();
-        
-        return view('pages.drink.squash.squashList')->with('data', $data);
+
+        return view('pages.drink.drinkList')->with('data', $data);
     }
 
 
@@ -80,9 +80,8 @@ class DrinkController extends Controller
         ]);
 
         // Check Thumbnail is Valid
-        if($request->thumbnail->isValid())
-        {
-            $thumbnail = 'thumbnail-'.$request->get('name').'.'.$request->thumbnail->extension();
+        if ($request->thumbnail->isValid()) {
+            $thumbnail = 'thumbnail-' . $request->get('name') . '.' . $request->thumbnail->extension();
             $request->file('thumbnail')->storeAs('drink/thumbnail', $thumbnail, 'public');
         }
 
@@ -96,7 +95,7 @@ class DrinkController extends Controller
             'thumbnail' => $thumbnail,
         ]);
         $drink->save();
-        
+
         DB::commit();
 
         alert()->success('Saved', 'drink recipe created successfully');
@@ -111,7 +110,9 @@ class DrinkController extends Controller
      */
     public function show(Drink $drink)
     {
-        //
+        return view('pages.drink.drinkDetail', [
+            'drink' => $drink
+        ]);
     }
 
     /**
@@ -120,11 +121,17 @@ class DrinkController extends Controller
      * @param  \App\Models\Drink  $drink
      * @return \Illuminate\Http\Response
      */
-    public function edit(Drink $drink)
+    public function edit(Drink $drink, Request $request)
     {
-        return view('pages.drink.juice.juiceDetail', [
-            'drink' => $drink
-        ]);
+        $user = $request->user();
+
+        if ($user->hasRole('admin')) {
+            return view('pages.drink.drinkEdit', [
+                'drink' => $drink
+            ]);
+        } else {
+            return view('pages.error.403');
+        }
     }
 
     /**
@@ -150,7 +157,6 @@ class DrinkController extends Controller
 
         alert()->success('Edited', 'Recipe updated successfully');
         return redirect()->route('drink.juice');
-
     }
 
     /**
@@ -159,12 +165,18 @@ class DrinkController extends Controller
      * @param  \App\Models\Drink  $drink
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $drink = Drink::find($id);
-        $drink->delete();
+        $user = $request->user();
 
-        alert()->success('Deleted', 'Recipe deleted successfully');
-        return redirect()->route('drink.juice');
+        if ($user->hasRole('admin')) {
+            $drink = Drink::find($id);
+            $drink->delete();
+
+            alert()->success('Deleted', 'Recipe deleted successfully');
+            return redirect()->route('drink.juice');
+        } else {
+            return view('pages.error.403');
+        }
     }
 }

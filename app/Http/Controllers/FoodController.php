@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Food;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FoodController extends Controller
 {
@@ -19,13 +20,13 @@ class FoodController extends Controller
     }
 
     /** Customization function for grouping food category */
-    
+
     /** Asian Food List */
     public function asian()
     {
         $data = Food::where('category', 'asian')->get();
-        
-        return view('pages.food.asian.asianList')->with('data', $data);
+
+        return view('pages.food.foodList')->with('data', $data);
     }
 
     /** Chinese Food List */
@@ -33,7 +34,7 @@ class FoodController extends Controller
     {
         $data = Food::where('category', 'chinese')->get();
 
-        return view('pages.food.chinese.chineseList')->with('data', $data);
+        return view('pages.food.foodList')->with('data', $data);
     }
 
     /** Indonesian Food List */
@@ -41,7 +42,7 @@ class FoodController extends Controller
     {
         $data = Food::where('category', 'indonesian')->get();
 
-        return view('pages.food.indonesian.indonesianList')->with('data', $data);
+        return view('pages.food.foodList')->with('data', $data);
     }
 
     /**Western Food List */
@@ -49,7 +50,7 @@ class FoodController extends Controller
     {
         $data = Food::where('category', 'western')->get();
 
-        return view('pages.food.western.westernList')->with('data', $data);
+        return view('pages.food.foodList')->with('data', $data);
     }
 
     /**
@@ -79,9 +80,8 @@ class FoodController extends Controller
         ]);
 
         // Check Thumbnail is Valid
-        if($request->thumbnail->isValid())
-        {
-            $thumbnail = 'thumbnail-'.$request->get('name').'.'.$request->thumbnail->extension();
+        if ($request->thumbnail->isValid()) {
+            $thumbnail = 'thumbnail-' . $request->get('name') . '.' . $request->thumbnail->extension();
             $request->file('thumbnail')->storeAs('food/thumbnail', $thumbnail, 'public');
         }
 
@@ -95,7 +95,7 @@ class FoodController extends Controller
             'thumbnail' => $thumbnail,
         ]);
         $food->save();
-        
+
         DB::commit();
 
         alert()->success('Saved', 'Food recipe created successfully');
@@ -110,7 +110,9 @@ class FoodController extends Controller
      */
     public function show(Food $food)
     {
-        //
+        return view('pages.food.foodDetail', [
+            'food' => $food
+        ]);
     }
 
     /**
@@ -119,11 +121,17 @@ class FoodController extends Controller
      * @param  \App\Models\Food  $food
      * @return \Illuminate\Http\Response
      */
-    public function edit(Food $food)
+    public function edit(Food $food, Request $request)
     {
-        return view('pages.food.asian.asianDetail', [
-            'food' => $food
-        ]);
+        $user = $request->user();
+
+        if ($user->hasRole('admin')) {
+            return view('pages.food.foodEdit', [
+                'food' => $food
+            ]);
+        } else {
+            return view('pages.error.403');
+        }
     }
 
     /**
@@ -157,12 +165,18 @@ class FoodController extends Controller
      * @param  \App\Models\Food  $food
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $food = Food::find($id);
-        $food->delete();
+        $user = $request->user();
 
-        alert()->success('Deleted', 'Recipe deleted successfully');
-        return redirect()->route('food.asian');
+        if ($user->hasRole('admin')) {
+            $food = Food::find($id);
+            $food->delete();
+
+            alert()->success('Deleted', 'Recipe deleted successfully');
+            return redirect()->route('food.asian');
+        } else {
+            return view('pages.error.403');
+        }
     }
 }

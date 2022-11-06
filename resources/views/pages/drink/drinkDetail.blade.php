@@ -4,7 +4,7 @@
     <div class="col-md-12 mb-4">
         <div class="card">
             <header class="card-header d-flex align-items-center">
-                <h2 class="h3 card-header-title">Recipe {{ $cake->name }}</h2>
+                <h2 class="h3 card-header-title">Recipe {{ $drink->name }}</h2>
 
                 <!-- Card Header Icon -->
                 <ul class="list-inline ml-auto mb-0">
@@ -18,15 +18,15 @@
             </header>
 
             <div class="card-body">
-                <h5 class="h4 card-title">{{ $cake->name }}</h5>
-                <p>{{ $cake->description }}</p>
+                <h5 class="h4 card-title">{{ $drink->name }} <i class="text-secondary">{{ $drink->category }}</i></h5>
+                <p>{{ $drink->description }}</p>
                 <img class="u-avatar--md rounded img-fluid mr-2"
-                    src="{{ asset('storage/cake/thumbnail/' . $cake->thumbnail) }}" alt="cake Thumbnail">
+                    src="{{ asset('storage/drink/thumbnail/' . $drink->thumbnail) }}" alt="drink Thumbnail">
                 <hr>
                 <b>Ingredients</b>
-                <p>{{ $cake->ingredient }}</p>
+                <p>{{ $drink->ingredient }}</p>
                 <b>Steps</b>
-                <p>{{ $cake->step }}</p>
+                <p>{{ $drink->step }}</p>
             </div>
 
             <footer class="card-footer d-flex align-items-center">

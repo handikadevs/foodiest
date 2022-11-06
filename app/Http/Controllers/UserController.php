@@ -26,10 +26,16 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = User::get();
-        return view('pages.user.userList')->with('data', $data);
+        $user = $request->user();
+
+        if ($user->hasRole('admin')) {
+            $data = User::get();
+            return view('pages.user.userList')->with('data', $data);
+        } else {
+            return view('pages.error.403');
+        }
     }
 
     /**
@@ -78,8 +84,8 @@ class UserController extends Controller
 
         // jika user role bukan admin
         else {
-            // alihkan kembali ke tabel user list
-            return redirect()->route('users.index');
+            // alihkan kembali ke error 403
+            return view('pages.error.403');
         }
     }
 
@@ -102,9 +108,13 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('pages.user.userDetail', [
-            'user' => $user
-        ]);
+        if ($user->hasRole('admin')) {
+            return view('pages.user.userDetail', [
+                'user' => $user
+            ]);
+        } else {
+            return view('pages.error.403');
+        }
     }
 
     /**
@@ -136,12 +146,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $user = User::find($id);
-        $user->delete();
+        $userRole = $request->user();
+        if ($userRole->hasRole('admin')) {
 
-        alert()->success('Deleted', 'User deleted successfully');
-        return redirect()->route('users.index');
+            $user = User::find($id);
+            $user->delete();
+
+            alert()->success('Deleted', 'User deleted successfully');
+            return redirect()->route('users.index');
+        } else {
+            return view('pages.error.403');
+        }
     }
 }
