@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiFormatter;
 use App\Models\Food;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -10,14 +11,30 @@ use Illuminate\Support\Facades\Auth;
 class FoodController extends Controller
 {
     /**
+     * Create api users instance.
+     *
+     * @return void
+     */
+    public function createFoodApi()
+    {
+        $data = Food::all();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'success', 'handikadevs', $data);
+        } else {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
+    }
+
+    /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     /** Customization function for grouping food category */
 

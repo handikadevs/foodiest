@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiFormatter;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -16,9 +18,25 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+
+    /**
+     * Create api users instance.
+     *
+     * @return void
+     */
+    public function apiIndex()
     {
-        $this->middleware('auth');
+        $data = User::all();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
+        } else {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
     }
 
     /**
@@ -46,6 +64,37 @@ class UserController extends Controller
     public function create()
     {
         //
+    }
+
+    /**
+     * Store a newly created api
+     * 
+     * 
+     */
+    public function apiStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required',
+            ]);
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make('foodiest123')
+            ]);
+
+            $data = User::where('id', '=', $user->id)->get();
+
+            if ($data) {
+                return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
+            } else {
+                return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
     }
 
     /**
@@ -95,9 +144,15 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function apiShow($id)
     {
-        //
+        $data = User::where('id', '=', $id)->get();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
+        } else {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
     }
 
     /**
@@ -114,6 +169,39 @@ class UserController extends Controller
             ]);
         } else {
             return view('pages.error.403');
+        }
+    }
+
+    /** 
+     * API Update the specified resource in storage
+     * 
+     * 
+     */
+    public function apiUpdate(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required',
+            ]);
+
+            $user = User::findOrFail($id);
+
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                // 'password' => Hash::make('foodiest123')
+            ]);
+
+            $data = User::where('id', '=', $user->id)->get();
+
+            if ($data) {
+                return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
+            } else {
+                return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
         }
     }
 
@@ -138,6 +226,24 @@ class UserController extends Controller
 
         alert()->success('Edited', 'User updated successfully');
         return redirect()->route('users.index');
+    }
+
+    /**
+     * Remove the specified API
+     * 
+     *  
+     */
+    public function apiDestroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        $data = $user->delete();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'Success Destroy Data', 'handikadevs');
+        } else {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
     }
 
     /**
