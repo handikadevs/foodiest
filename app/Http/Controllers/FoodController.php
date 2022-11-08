@@ -7,6 +7,7 @@ use App\Models\Food;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class FoodController extends Controller
 {
@@ -15,7 +16,7 @@ class FoodController extends Controller
      *
      * @return void
      */
-    public function createFoodApi()
+    public function apiIndex()
     {
         $data = Food::all();
 
@@ -25,6 +26,111 @@ class FoodController extends Controller
             return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
         }
     }
+
+    /**
+     * store a newly created api
+     * 
+     * 
+     */
+    public function apiStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => 'required',
+                'category' => 'required',
+                'thumbnail' => 'required',
+                'ingredient' => 'required',
+                'step' => 'required'
+            ]);
+
+            if ($request->thumbnail->isValid()) {
+                $thumbnail = 'thumbnail-' . $request->get('name') . '.' . $request->thumbnail->extension();
+                $request->file('thumbnail')->storeAs('food/thumbnail', $thumbnail, 'public');
+            }
+
+            DB::beginTransaction();
+            $food = Food::create([
+                'name' => $request->get('name'),
+                'description' => $request->get('description'),
+                'category' => $request->get('category'),
+                'ingredient' => $request->get('ingredient'),
+                'step' => $request->get('step'),
+                'thumbnail' => $thumbnail,
+            ]);
+            $food->save();
+
+            DB::commit();
+
+            $data = Food::where('id', '=', $food->id)->get();
+
+            if ($data) {
+                return ApiFormatter::createApi(200, 'success', 'handikadevs', $data);
+            } else {
+                return ApiFormatter::createApi(400, 'Falid', 'handikadevs');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(400, 'Falid', 'handikadevs');
+        }
+    }
+
+    public function apiSHow($id)
+    {
+        $data = Food::where('id', '=', $id)->get();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'success', 'handikadevs', $data);
+        } else {
+            return ApiFormatter::createApi(400, 'Falid', 'handikadevs');
+        }
+    }
+
+    public function apiUpdate(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'name' => 'required',
+                'category' => 'required',
+                'description' => 'required',
+                'ingredient' => 'required',
+                'step' => 'required'
+            ]);
+
+            $food = Food::findOrFail($id);
+
+            $food->update([
+                'name' => $request->name,
+                'category' => $request->category,
+                'description' => $request->description,
+                'ingredient' => $request->ingredient,
+                'step' => $request->step,
+
+            ]);
+
+            $data = Food::where('id', '=', $food->id)->get();
+
+            if ($data) {
+                return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
+            } else {
+                return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
+    }
+
+    public function apiDestroy($id)
+    {
+        $food = Food::findOrfail($id);
+
+        $data = $food->delete();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'Suscess Destroy Data', 'handikadevs');
+        } else {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
+    }
+
 
     /**
      * Create a new controller instance.

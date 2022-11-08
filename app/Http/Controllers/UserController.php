@@ -23,6 +23,8 @@ class UserController extends Controller
     //     $this->middleware('auth');
     // }
 
+    /*** API RESOURCE ***/
+
     /**
      * Create api users instance.
      *
@@ -37,33 +39,6 @@ class UserController extends Controller
         } else {
             return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
         }
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        $user = $request->user();
-
-        if ($user->hasRole('admin')) {
-            $data = User::get();
-            return view('pages.user.userList')->with('data', $data);
-        } else {
-            return view('pages.error.403');
-        }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -96,6 +71,104 @@ class UserController extends Controller
             return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
         }
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function apiShow($id)
+    {
+        $data = User::where('id', '=', $id)->get();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
+        } else {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
+    }
+
+    /** 
+     * API Update the specified resource in storage
+     * 
+     * 
+     */
+    public function apiUpdate(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required',
+            ]);
+
+            $user = User::findOrFail($id);
+
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                // 'password' => Hash::make('foodiest123')
+            ]);
+
+            $data = User::where('id', '=', $user->id)->get();
+
+            if ($data) {
+                return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
+            } else {
+                return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
+    }
+
+    /**
+     * Remove the specified API
+     * 
+     *  
+     */
+    public function apiDestroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        $data = $user->delete();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'Success Destroy Data', 'handikadevs');
+        } else {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
+    }
+
+    /*** LARAVEL VIEW RESOURCE ***/
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->hasRole('admin')) {
+            $data = User::get();
+            return view('pages.user.userList')->with('data', $data);
+        } else {
+            return view('pages.error.403');
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -139,23 +212,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function apiShow($id)
-    {
-        $data = User::where('id', '=', $id)->get();
-
-        if ($data) {
-            return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
-        } else {
-            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
-        }
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -169,39 +225,6 @@ class UserController extends Controller
             ]);
         } else {
             return view('pages.error.403');
-        }
-    }
-
-    /** 
-     * API Update the specified resource in storage
-     * 
-     * 
-     */
-    public function apiUpdate(Request $request, $id)
-    {
-        try {
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required',
-            ]);
-
-            $user = User::findOrFail($id);
-
-            $user->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                // 'password' => Hash::make('foodiest123')
-            ]);
-
-            $data = User::where('id', '=', $user->id)->get();
-
-            if ($data) {
-                return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
-            } else {
-                return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
-            }
-        } catch (Exception $error) {
-            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
         }
     }
 
@@ -226,24 +249,6 @@ class UserController extends Controller
 
         alert()->success('Edited', 'User updated successfully');
         return redirect()->route('users.index');
-    }
-
-    /**
-     * Remove the specified API
-     * 
-     *  
-     */
-    public function apiDestroy($id)
-    {
-        $user = User::findOrFail($id);
-
-        $data = $user->delete();
-
-        if ($data) {
-            return ApiFormatter::createApi(200, 'Success Destroy Data', 'handikadevs');
-        } else {
-            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
-        }
     }
 
     /**

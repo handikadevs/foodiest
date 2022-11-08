@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Drink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\ApiFormatter;
+use Exception;
 
 class DrinkController extends Controller
 {
@@ -13,9 +15,121 @@ class DrinkController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+
+    /***API RESOURCE ***/
+
+    public function apiIndex()
     {
-        $this->middleware('auth');
+        $data = Drink::all();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
+        } else {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
+    }
+
+    public function apiStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => 'required',
+                'category' => 'required',
+                'thumbnail' => 'required',
+                'ingredient' => 'required',
+                'step' => 'required'
+            ]);
+
+            if ($request->thumbnail->isValid()) {
+                $thumbnail = 'thumbnail-' . $request->get('name') . '.' . $request->thumbnail->extension();
+                $request->file('thumbnail')->storeAs('drink/thumbnail', $thumbnail, 'public');
+            }
+
+            DB::beginTransaction();
+            $drink = Drink::create([
+                'name' => $request->get('name'),
+                'description' => $request->get('description'),
+                'category' => $request->get('category'),
+                'ingredient' => $request->get('ingredient'),
+                'step' => $request->get('step'),
+                'thumbnail' => $thumbnail,
+            ]);
+            $drink->save();
+
+            DB::commit();
+
+            $data = Drink::where('id', '=', $drink->id)->get();
+
+            if ($data) {
+                return ApiFormatter::createApi(200, 'success', 'handikadevs', $data);
+            } else {
+                return ApiFormatter::createApi(400, 'Falid', 'handikadevs');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(400, 'Falid', 'handikadevs');
+        }
+    }
+
+    public function apiSHow($id)
+    {
+        $data = Drink::where('id', '=', $id)->get();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'success', 'handikadevs', $data);
+        } else {
+            return ApiFormatter::createApi(400, 'Falid', 'handikadevs');
+        }
+    }
+
+    public function apiUpdate(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'name' => 'required',
+                'category' => 'required',
+                'description' => 'required',
+                'ingredient' => 'required',
+                'step' => 'required'
+            ]);
+
+            $drink = Drink::findOrFail($id);
+
+            $drink->update([
+                'name' => $request->name,
+                'category' => $request->category,
+                'description' => $request->description,
+                'ingredient' => $request->ingredient,
+                'step' => $request->step,
+
+            ]);
+
+            $data = Drink::where('id', '=', $drink->id)->get();
+
+            if ($data) {
+                return ApiFormatter::createApi(200, 'Success', 'handikadevs', $data);
+            } else {
+                return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
+    }
+
+    public function apiDestroy($id)
+    {
+        $drink = Drink::findOrfail($id);
+
+        $data = $drink->delete();
+
+        if ($data) {
+            return ApiFormatter::createApi(200, 'Suscess Destroy Data', 'handikadevs');
+        } else {
+            return ApiFormatter::createApi(400, 'Failed', 'handikadevs');
+        }
     }
 
     /** Customization function for grouping drink category */
