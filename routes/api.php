@@ -41,6 +41,12 @@ Route::prefix('v1')->group(function () {
     Route::get('cakes/show/{id}', [CakeController::class, 'apiShow']);
     Route::post('cakes/update/{id}', [CakeController::class, 'apiUpdate']);
     Route::get('cakes/destroy/{id}', [CakeController::class, 'apiDestroy']);
+    //MY RECIPE Api
+    Route::get('myRecipes', [MyRecipeController::class, 'apiIndex']);
+    Route::post('myRecipes/store', [MyRecipeController::class, 'apiStore']);
+    Route::get('myRecipes/show/{id}', [MyRecipeController::class, 'apiShow']);
+    Route::post('myRecipes/update/{id}', [MyRecipeController::class, 'apiUpdate']);
+    Route::get('myRecipes/destroy/{id}', [MyRecipeController::class, 'apiDestroy']);
 });
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
