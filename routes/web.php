@@ -3,6 +3,7 @@
 use App\Http\Controllers\CakeController;
 use App\Http\Controllers\DrinkController;
 use App\Http\Controllers\FoodController;
+use App\Http\Controllers\MyRecipeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UserController;
@@ -45,4 +46,12 @@ Route::prefix('drink')->group(function () {
     Route::get('/coffeeteas', [DrinkController::class, 'coffee_and_tea'])->name('drink.coffeetea');
     Route::get('/milkshakes', [DrinkController::class, 'milk'])->name('drink.milkshake');
     Route::get('/squashs', [DrinkController::class, 'squash'])->name('drink.squash');
+});
+
+Route::prefix('my_recipe')->group(function () {
+    Route::resource('my_recipe', MyRecipeController::class);
+    Route::get('/foods', [MyRecipeController::class, 'food'])->name('my_recipe.food');
+    Route::get('/drinks', [MyRecipeController::class, 'drink'])->name('my_recipe.drink');
+    Route::get('/cakes', [MyRecipeController::class, 'cake'])->name('my_recipe.cake');
+    Route::get('/others', [MyRecipeController::class, 'other'])->name('my_recipe.other');
 });

@@ -19,9 +19,20 @@
                 </li>
                 <!-- End Dashboard -->
 
+                <!-- My Recipe -->
+                <li class="u-sidebar-nav-menu__item">
+                    <a class="u-sidebar-nav-menu__link {{ request()->is('my_recipe*') ? 'active' : '' }}"
+                        href="{{ route('my_recipe.food') }}">
+                        <i class="fa fa-bookmark u-sidebar-nav-menu__item-icon"></i>
+                        <span class="u-sidebar-nav-menu__item-title">My Recipe</span>
+                    </a>
+                </li>
+                <!-- End My Recipe -->
+
                 <!-- Food -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link {{ request()->is('food*') ? 'active' : '' }}" href="{{ route('food.asian') }}">
+                    <a class="u-sidebar-nav-menu__link {{ request()->is('food*') ? 'active' : '' }}"
+                        href="{{ route('food.asian') }}">
                         <i class="fa fa-utensils u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Food</span>
                     </a>
@@ -30,7 +41,8 @@
 
                 <!-- Cake -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link {{ request()->is('cake*') ? 'active' : ''}}" href="{{ route('cakes.index')}}">
+                    <a class="u-sidebar-nav-menu__link {{ request()->is('cake*') ? 'active' : '' }}"
+                        href="{{ route('cakes.index') }}">
                         <i class="fa fa-birthday-cake u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Cake</span>
                     </a>
@@ -39,10 +51,11 @@
 
                 <!-- Drink -->
                 <li class="u-sidebar-nav-menu__item">
-                    <a class="u-sidebar-nav-menu__link {{ request()->is('drink*') ? 'active' : ''}}" href="{{ route('drink.juice')}}">
+                    <a class="u-sidebar-nav-menu__link {{ request()->is('drink*') ? 'active' : '' }}"
+                        href="{{ route('drink.juice') }}">
                         <i class="fa fa-cocktail u-sidebar-nav-menu__item-icon"></i>
                         <span class="u-sidebar-nav-menu__item-title">Drink</span>
-            
+
                     </a>
 
                 </li>
